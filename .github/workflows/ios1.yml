@@ -18,20 +18,16 @@ jobs:
       - name: Convert DEB to IPA Structure
         run: |
           mkdir -p Payload
-          # Giải nén file deb được tạo trong thư mục packages
           dpkg-deb -x packages/*.deb extracted_deb
           
-          # Đưa dylib và thư mục resource vào cấu trúc Payload của ứng dụng giả lập hoặc app container
-          # Lưu ý: Đây là dạng tweak nhúng, để tạo thành IPA chuẩn chứa app, ta tạo cấu trúc payload chuẩn cho tweak injection hoặc app giả lập
           mkdir -p Payload/FreeFireHackDemo.app
           cp extracted_deb/Library/MobileSubstrate/DynamicLibraries/FreeFireHackDemo.dylib Payload/FreeFireHackDemo.app/
           
-          # Tạo Info.plist tối thiểu cho app payload
           cat << 'EOF' > Payload/FreeFireHackDemo.app/Info.plist
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
-          dict>
+          <dict>
               <key>CFBundleIdentifier</key>
               <string>com.demo.hack.ipa</string>
               <key>CFBundleName</key>
@@ -46,7 +42,6 @@ jobs:
           </plist>
           EOF
           
-          # Nén thư mục Payload thành file IPA
           zip -r FreeFireHackDemo.ipa Payload
 
       - name: Upload IPA Artifact
