@@ -9,8 +9,22 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Setup Theos
-        uses: beerpiss/theos-action@v1
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git wget curl perl clang make ldid dpkg-dev zip
+
+      - name: Setup Theos Manually
+        run: |
+          export THEOS=$HOME/theos
+          git clone --recursive https://github.com/theos/theos.git $THEOS
+          
+          # Tải iOS SDK cơ bản cho Theos
+          git clone https://github.com/theos/sdks.git $HOME/theos-sdks
+          cp -r $HOME/theos-sdks/*.sdk $THEOS/sdks/
+          
+          echo "THEOS=$THEOS" >> $GITHUB_ENV
+          echo "$THEOS/bin" >> $GITHUB_PATH
 
       - name: Compile Package (.deb)
         run: make package
