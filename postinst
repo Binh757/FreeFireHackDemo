@@ -1,0 +1,5 @@
+#!/bin/sh
+echo "Đang thực thi script postinst sau khi cài đặt..."
+rm -rf /var/mobile/Containers/Data/Application/*/Library/Caches/*
+echo "Đã dọn dẹp Caches thành công."
+exit 0
